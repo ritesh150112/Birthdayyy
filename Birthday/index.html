@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Rishu ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root{
+--bg:#05050a;--accent:#ffb7ce;--secondary:#7fb3ff;--text:#fff;
+--glass:rgba(255,255,255,.06);--border:rgba(255,255,255,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+height:100vh;
+font-family:'Dancing Script',cursive;
+color:var(--text);
+background:linear-gradient(-45deg,#05050a,#111133,#1a1a2e,#05050a);
+background-size:400% 400%;
+animation:bgmove 18s ease infinite;
+overflow:hidden}
+@keyframes bgmove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:2rem;opacity:0;visibility:hidden;transition:1.4s cubic-bezier(.4,0,.2,1)}
+.scene.active{opacity:1;visibility:visible}
+
+h1,h2{font-family:'Dancing Script',cursive}
+h1{font-size:clamp(2.4rem,7vw,4.5rem)}
+.gradient-text{background:linear-gradient(45deg,var(--accent),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+.glass-card{
+background:var(--glass);
+backdrop-filter:blur(30px);
+border-radius:45px;
+padding:3rem;
+border:1px solid var(--border);
+box-shadow:0 40px 120px rgba(0,0,0,.6);
+animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+.letter-text{max-height:45vh;overflow:auto;line-height:1.9;text-align:left;opacity:.95;margin-top:1.5rem;font-family:'Dancing Script',cursive}
+
+.btn{
+margin-top:2rem;padding:1rem 3.2rem;border-radius:999px;border:none;
+font-weight:700;cursor:pointer;background:#fff;color:#000;
+transition:.4s;font-family:'Dancing Script',cursive}
+.btn:hover{transform:scale(1.07);box-shadow:0 20px 40px rgba(255,183,206,.5)}
+
+.heart{position:fixed;color:var(--accent);font-size:18px;animation:rise 3s linear forwards;pointer-events:none}
+@keyframes rise{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-120px)}}
+
+.music-bar{position:fixed;bottom:20px;left:20px;display:none;gap:8px;background:rgba(255,255,255,.08);padding:10px 18px;border-radius:30px;border:1px solid var(--border)}
+.bar{width:3px;height:15px;background:var(--accent);animation:play 1s infinite}
+@keyframes play{0%,100%{height:5px}50%{height:15px}}
+</style>
+</head>
+<body>
+
+<div class="music-bar" id="music-ui"><div class="bar"></div><div class="bar" style="animation-delay:.2s"></div><div class="bar" style="animation-delay:.4s"></div><span style="font-size:.8rem;margin-left:10px">Aise Kyun ❤️</span></div>
+
+<section class="scene active" id="scene-1">
+<h1 class="gradient-text">Hey Rishu ❤️</h1>
+<p style="opacity:.75;font-size:1.2rem;margin-top:1rem">A love story that began on <b>10 August 2023</b></p>
+<button class="btn" id="startBtn">Unlock the Magic ✨</button>
+</section>
+
+<section class="scene" id="scene-2">
+<div class="glass-card">
+<h1 class="gradient-text">Happy Birthday, My Queen 🎂</h1>
+<p style="opacity:.85;margin-top:1.5rem">Every heartbeat of mine whispers your name.</p>
+<button class="btn" id="letterBtn">Read My Letter 💌</button>
+</div>
+</section>
+
+<section class="scene" id="scene-3">
+<div class="glass-card">
+<h2 class="gradient-text">My Queen…</h2>
+<div class="letter-text" id="letter"></div>
+<p style="margin-top:1.2rem;color:var(--secondary);font-style:italic">Forever Yours.</p>
+<button class="btn" id="celebrateBtn">Celebrate Us 🎉</button>
+</div>
+</section>
+
+<section class="scene" id="scene-4">
+<div class="glass-card">
+<h1 class="gradient-text">Will you always stay with me? 💍</h1>
+<p style="opacity:.85;margin-top:1rem">Forever isn’t long enough… but I want every moment with you.</p>
+<button class="btn" id="yesBtn">Yes ❤️</button>
+</div>
+</section>
+
+<audio id="bg-music" loop playsinline preload="auto">
+<source src="https://pagalfree.com/musics/128-Aise%20Kyun%20-%20Mismatched%20128%20Kbps.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+
+  const music=document.getElementById('bg-music');
+  const letter=document.getElementById('letter');
+
+  const letterText=`Rishu, I love you. When I saw you for the first time, I melted. I couldn't believe how beautiful and cute you are. I felt a strong connection with you from that moment. I've loved you since then and will continue to love you forever, throughout my lifetime. No matter what happens or what the situation is, I will always be here for you. You can do whatever you want; I'm always here to support you.
+
+I found myself in you. You're more than I deserve, and I am happiest when I'm with you. You are the only reason I smile. You're perfect, my queen. I love you so much that I don't know what comes after infinity, but I love you even more than that. You are my everything, my world, my safe place, my home. I am all yours.
+
+I want to marry you. You are the only one I am serious about in my life, and I want to be with you always. The day you asked me to be your boyfriend on August 10, 2023, was pure happiness. I promise to keep you happy and treat you like a princess, always. 💙`;
+
+  function nextScene(id){
+    document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+    setTimeout(()=>document.getElementById(`scene-${id}`).classList.add('active'),300);
+    if(id===3) letter.innerHTML=letterText.replace(/\n/g,'<br>');
+  }
+
+  function startExperience(){
+    document.getElementById('music-ui').style.display='flex';
+    // Play music after user interaction to satisfy browser autoplay policy
+    music.currentTime=44;
+    music.play().catch(()=>{
+      console.log('User interaction required to play music');
+    });
+    nextScene(2);
+  }
+
+  function finalCelebrate(){
+    for(let i=0;i<3;i++){
+      confetti({particleCount:120,spread:100,colors:['#ffb7ce','#7fb3ff','#fff'],origin:{y:.7}});
+    }
+    setTimeout(()=>nextScene(4),1200);
+  }
+
+  function yesForever(){
+    for(let i=0;i<6;i++){
+      setTimeout(()=>{
+        confetti({particleCount:200,spread:140,colors:['#ffb7ce','#ff5fa2','#7fb3ff','#ffffff'],origin:{y:.6}});
+      },i*300);
+    }
+  }
+
+  document.getElementById('startBtn').onclick=startExperience;
+  document.getElementById('letterBtn').onclick=()=>nextScene(3);
+  document.getElementById('celebrateBtn').onclick=finalCelebrate;
+  document.getElementById('yesBtn').onclick=yesForever;
+
+  document.addEventListener('mousemove',e=>{
+    const h=document.createElement('div');
+    h.className='heart';
+    h.style.left=e.clientX+'px';
+    h.style.top=e.clientY+'px';
+    h.innerHTML='❤';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),3000);
+  });
+});
+</script>
+</body>
+</html>
