@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Queen Rishu ❤️</title>
+
+<!-- Fonts & Libraries -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+:root {
+    --bg: #05050a;
+    --accent: #ffb7ce;
+    --secondary: #7fb3ff;
+    --text: #ffffff;
+    --glass: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+@media (hover: hover) and (pointer: fine) {
+    * { cursor: none !important; }
+    #cursor-dot, #cursor-outline { display: block !important; }
+}
+
+body {
+    height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text);
+    background: radial-gradient(circle at center, #1a1a3a 0%, #05050a 100%);
+    overflow: hidden;
+    perspective: 1000px;
+    touch-action: none;
+}
+
+/* CUSTOM CURSOR */
+#cursor-dot, #cursor-outline {
+    position: fixed; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%); display: none; 
+}
+#cursor-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; }
+#cursor-outline { width: 35px; height: 35px; border: 2px solid var(--accent); border-radius: 50%; transition: all 0.15s ease-out; }
+
+#canvas-stars { position: fixed; inset: 0; z-index: -1; }
+
+.scene {
+    position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 1.5rem; opacity: 0; visibility: hidden;
+    transform: translateY(20px) scale(0.95); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.scene.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.2rem, 10vw, 4.5rem); margin-bottom: 0.5rem; }
+.gradient-text {
+    background: linear-gradient(45deg, var(--accent), #fff, var(--secondary));
+    background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+}
+@keyframes shine { to { background-position: 200% center; } }
+
+.glass-card {
+    background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-radius: 25px; padding: 2rem; border: 1px solid var(--border);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4); max-width: 500px; width: 92%;
+}
+
+/* PHOTO FRAMES */
+.photo-frame {
+    width: 200px; height: 200px; margin: 0 auto 1.5rem; border-radius: 20px;
+    border: 4px solid #fff; box-shadow: 0 0 25px var(--accent);
+    overflow: hidden; animation: floatingImg 4s ease-in-out infinite;
+}
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+.final-photo {
+    width: 100%; max-width: 280px; height: auto; margin-bottom: 1rem; border-radius: 20px;
+    border: 4px solid var(--accent); box-shadow: 0 0 40px var(--accent);
+    animation: pulseGlow 2s infinite alternate; object-fit: contain;
+}
+@keyframes pulseGlow {
+    from { transform: scale(1); }
+    to { transform: scale(1.03); }
+}
+
+@keyframes floatingImg { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* CAKE CUTTING SYSTEM */
+.cake-wrapper {
+    position: relative; width: 280px; height: 280px; margin: 20px auto;
+}
+.cake-half {
+    position: absolute; width: 100%; height: 100%;
+    background-image: url('https://files.catbox.moe/zqebah.jpeg');
+    background-size: cover; background-position: center;
+    transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+}
+.cake-left { clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
+.cake-right { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); }
+
+.is-cut .cake-left { transform: translateX(-40px) rotate(-5deg); }
+.is-cut .cake-right { transform: translateX(40px) rotate(5deg); }
+
+#knife-tool {
+    position: absolute; font-size: 40px; pointer-events: none;
+    z-index: 100; transform: translate(-50%, -50%) rotate(-45deg); display: none;
+}
+
+.counter-box { margin: 1rem 0; font-size: 1rem; color: var(--accent); }
+.letter-text { max-height: 40vh; overflow-y: auto; line-height: 1.6; text-align: left; font-family: 'Dancing Script', cursive; font-size: 1.25rem; scrollbar-width: none; }
+
+.btn {
+    margin-top: 1.5rem; padding: 0.8rem 2.2rem; border-radius: 50px; border: none;
+    font-weight: 600; background: white; color: #000; transition: 0.3s;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+.btn:hover { transform: scale(1.05); background: var(--accent); color: white; }
+
+.heart-particle { position: fixed; pointer-events: none; animation: floatUp 2.5s ease-out forwards; z-index: 9998; }
+@keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(0); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-outline"></div>
+<canvas id="canvas-stars"></canvas>
+
+<!-- Music UI is now removed as requested -->
+
+<!-- Scene 1: Welcome -->
+<section class="scene active" id="scene-1">
+    <h1 class="gradient-text">My Cupcake ❤️</h1>
+    <div class="counter-box" id="love-counter">Loading...</div>
+    <button class="btn" id="startBtn">Unlock Magic ✨</button>
+</section>
+
+<!-- Scene 2: Birthday -->
+<section class="scene" id="scene-2">
+    <div class="glass-card">
+        <h1 class="gradient-text">Happy Birthday, Queen 🎂</h1>
+        <p style="opacity: 0.9;">Every heartbeat of mine whispers your name.</p>
+        <button class="btn" id="letterBtn">Open My Heart 💌</button>
+    </div>
+</section>
+
+<!-- Scene 3: The Letter -->
+<section class="scene" id="scene-3">
+    <div class="glass-card">
+        <h2 class="gradient-text" style="font-size: 2rem;">My Everything...</h2>
+        <div class="letter-text" id="typewriter-letter"></div>
+        <button class="btn" id="celebrateBtn" style="display:none">Pure Happiness 🎉</button>
+    </div>
+</section>
+
+<!-- Scene 4: Proposal -->
+<section class="scene" id="scene-4">
+    <div class="glass-card">
+        <div class="photo-frame">
+            <img src="https://files.catbox.moe/v738x5.jpeg" alt="Us ❤️">
+        </div>
+        <h1 class="gradient-text" style="font-size: 1.8rem;">Will you always stay with me? 💍</h1>
+        <p>I want every moment with you.</p>
+        <button class="btn" id="yesBtn">Yes, Forever ❤️</button>
+    </div>
+</section>
+
+<!-- Scene 5: Virtual Cake Cutting -->
+<section class="scene" id="scene-5">
+    <h1 class="gradient-text">Cut Your Birthday Cake! 🎂</h1>
+    <div class="cake-wrapper" id="cake-area">
+        <div id="knife-tool">🔪</div>
+        <div class="cake-half cake-left"></div>
+        <div class="cake-half cake-right"></div>
+    </div>
+    <button class="btn" id="toFinalBtn" style="display:none">I Love You! ❤️</button>
+</section>
+
+<!-- Scene 6: The Finale -->
+<section class="scene" id="scene-6">
+    <div class="glass-card">
+        <img src="https://files.catbox.moe/8tdbpc.jpeg" alt="Cute Moment" class="final-photo">
+        <h1 class="gradient-text">Forever & Always ❤️</h1>
+        <p style="font-style: italic; opacity: 0.9;">"You're my favorite notification, my favorite person, and my favorite reason to smile."</p>
+        <p style="margin-top: 10px; color: var(--accent); font-weight: bold;">Happy Birthday, Rishu!</p>
+    </div>
+</section>
+
+<audio id="bg-music" loop playsinline>
+    <source src="https://files.catbox.moe/0ntr4q.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const letterText = `Rishu, I love you. When I saw you for the first time, I melted. I couldn't believe how beautiful and cute you are. I felt a strong connection with you from that moment. I've loved you since then and will continue to love you forever, throughout my lifetime. No matter what happens or what the situation is, I will always be here for you. You can do whatever you want; I'm always here to support you.\n\nI found myself in you. You're more than I deserve, and I am happiest when I'm with you. You are the only reason I smile. You're perfect, my queen. I love you so much that I don't know what comes after infinity, but I love you even more than that. You are my everything, my world, my safe place, my home. I am all yours.\n\nI want to marry you. You are the only one I am serious about in my life, and I want to be with you always. The day you asked me to be your boyfriend on August 10, 2023, was pure happiness. I promise to keep you happy and treat you like a princess, always. 💙`;
+
+const cursorDot = document.getElementById('cursor-dot');
+const cursorOutline = document.getElementById('cursor-outline');
+const music = document.getElementById('bg-music');
+
+// Interactions
+const handleMove = (e) => {
+    const x = e.clientX || (e.touches && e.touches[0].clientX);
+    const y = e.clientY || (e.touches && e.touches[0].clientY);
+    if (x && y) {
+        cursorDot.style.left = `${x}px`; cursorDot.style.top = `${y}px`;
+        cursorOutline.animate({ left: `${x}px`, top: `${y}px` }, { duration: 400, fill: "forwards" });
+        if(Math.random() > 0.9) {
+            const h = document.createElement('div'); h.className = 'heart-particle'; h.innerHTML = '❤️';
+            h.style.left = x + 'px'; h.style.top = y + 'px'; h.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            document.body.appendChild(h); setTimeout(() => h.remove(), 2000);
+        }
+    }
+};
+window.addEventListener('mousemove', handleMove);
+window.addEventListener('touchstart', handleMove);
+
+// Cake Logic
+const cakeArea = document.getElementById('cake-area');
+const knifeTool = document.getElementById('knife-tool');
+let canCut = false;
+const startCutting = () => { canCut = true; knifeTool.style.display = 'block'; };
+const stopCutting = () => { canCut = false; knifeTool.style.display = 'none'; };
+
+cakeArea.addEventListener('mousedown', startCutting);
+cakeArea.addEventListener('touchstart', startCutting);
+window.addEventListener('mouseup', stopCutting);
+window.addEventListener('touchend', stopCutting);
+window.addEventListener('mousemove', (e) => processCut(e.clientX, e.clientY));
+window.addEventListener('touchmove', (e) => processCut(e.touches[0].clientX, e.touches[0].clientY));
+
+function processCut(currX, currY) {
+    if (!canCut) return;
+    const rect = cakeArea.getBoundingClientRect();
+    const relX = currX - rect.left;
+    const relY = currY - rect.top;
+    knifeTool.style.left = relX + 'px'; knifeTool.style.top = relY + 'px';
+    if (relX > rect.width * 0.45 && relX < rect.width * 0.55) {
+        if (!cakeArea.classList.contains('is-cut')) {
+            cakeArea.classList.add('is-cut');
+            confetti({ particleCount: 200, spread: 100, origin: { y: 0.7 } });
+            document.getElementById('toFinalBtn').style.display = 'inline-block';
+        }
+    }
+}
+
+// Scene Control
+const nextScene = (id) => {
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+    setTimeout(() => document.getElementById(`scene-${id}`).classList.add('active'), 50);
+};
+
+document.getElementById('startBtn').onclick = () => {
+    music.currentTime = 23; music.play();
+    music.ontimeupdate = () => { if (music.currentTime >= 143) music.pause(); };
+    nextScene(2);
+};
+
+document.getElementById('letterBtn').onclick = () => {
+    nextScene(3);
+    setTimeout(() => typeWriter(letterText, document.getElementById('typewriter-letter')), 800);
+};
+
+document.getElementById('celebrateBtn').onclick = () => {
+    confetti({ particleCount: 100, spread: 70 });
+    setTimeout(() => nextScene(4), 1200);
+};
+
+document.getElementById('yesBtn').onclick = () => nextScene(5);
+
+document.getElementById('toFinalBtn').onclick = () => {
+    confetti({ particleCount: 250, spread: 150 });
+    nextScene(6);
+};
+
+// Utils
+const canvas = document.getElementById('canvas-stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars = []; for(let i=0; i<80; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2, v: Math.random()*0.5}); }
+function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "#fff"; stars.forEach(s => { s.y -= s.v; if(s.y<0) s.y=canvas.height; ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill(); }); requestAnimationFrame(animate); }
+function updateCounter() {
+    const start = new Date('2023-08-10T00:00:00');
+    const now = new Date();
+    const diff = now - start;
+    const days = Math.floor(diff / 86400000);
+    const hrs = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    document.getElementById('love-counter').innerHTML = `${days}d ${hrs}h ${mins}m ${secs}s of Us`;
+}
+function typeWriter(text, element) {
+    let i = 0; element.innerHTML = "";
+    function type() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+            i++; setTimeout(type, 40);
+            element.scrollTop = element.scrollHeight;
+        } else { document.getElementById('celebrateBtn').style.display = 'inline-block'; }
+    }
+    type();
+}
+window.onload = () => { initCanvas(); animate(); setInterval(updateCounter, 1000); };
+window.onresize = initCanvas;
+</script>
+</body>
+</html>
